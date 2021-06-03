@@ -8,17 +8,12 @@ from torch import optim
 from arch2vec.models.model import Model, VAEReconstructed_Loss
 from arch2vec.utils import load_json, save_checkpoint_vae, preprocessing
 from arch2vec.utils import get_val_acc_vae
+from arch2vec.utils import to_ops_nasbench101
 from arch2vec.models.configs import configs
 import argparse
 from nasbench import api
 from nasbench.lib import graph_util
 
-def transform_operations(max_idx):
-    transform_dict =  {0:'input', 1:'conv1x1-bn-relu', 2:'conv3x3-bn-relu', 3:'maxpool3x3', 4:'output'}
-    ops = []
-    for idx in max_idx:
-        ops.append(transform_dict[idx.item()])
-    return ops
 
 def _build_dataset(dataset, list):
     indices = np.random.permutation(list)
@@ -84,7 +79,7 @@ def pretraining_model(dataset, cfg, args):
             one_hot = torch.zeros_like(op)
             for i in range(one_hot.shape[0]):
                 one_hot[i][max_idx[i]] = 1
-            op_decode = transform_operations(max_idx)
+            op_decode = to_ops_nasbench101(max_idx)
             ad_decode = (ad>0.5).int().triu(1).numpy()
             ad_decode = np.ndarray.tolist(ad_decode)
             spec = api.ModelSpec(matrix=ad_decode, ops=op_decode)

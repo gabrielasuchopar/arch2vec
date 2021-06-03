@@ -230,6 +230,13 @@ def to_ops_darts(idx):
         ops.append(transform_dict[id.item()])
     return ops
 
+def to_ops_nasbench101(max_idx):
+    transform_dict = {0: 'input', 1: 'conv1x1-bn-relu', 2: 'conv3x3-bn-relu', 3: 'maxpool3x3', 4: 'output'}
+    ops = []
+    for idx in max_idx:
+        ops.append(transform_dict[idx.item()])
+    return ops
+
 def to_ops_nasbench201(idx):
     transform_dict = {0:'input',1:'nor_conv_1x1',2:'nor_conv_3x3',3:'avg_pool_3x3',4:'skip_connect',5:'none',6:'output'}
     ops = []
