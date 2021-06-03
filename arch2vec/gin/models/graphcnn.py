@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 import sys
-sys.path.append("models/")
+
 from arch2vec.gin.models.mlp import MLP
 
 class GraphCNN(nn.Module):

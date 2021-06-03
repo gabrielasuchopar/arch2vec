@@ -1,6 +1,6 @@
 import os
 import sys
-sys.path.insert(0, os.getcwd())
+
 import torch
 import torch.nn as nn
 import numpy as np

@@ -2,7 +2,7 @@ import torch
 import numpy as np
 import os
 import sys
-sys.path.insert(0, os.getcwd())
+
 from arch2vec.pybnn.dngo_supervised import DNGO
 import json
 import argparse

@@ -1,6 +1,6 @@
 import os
 import sys
-sys.path.insert(0, os.getcwd())
+
 import numpy as np
 import argparse
 import json
@@ -9,6 +9,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
+
 from arch2vec.gin.models.mlp import MLP
 from arch2vec.models.pretraining_nasbench101 import configs
 from arch2vec.utils import preprocessing

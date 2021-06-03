@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import os
 import sys
-sys.path.insert(0, os.getcwd())
+
 import arch2vec.darts.cnn.genotypes
 from plot_scripts import draw_darts
 from arch2vec.utils import load_json

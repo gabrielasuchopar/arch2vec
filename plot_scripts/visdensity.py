@@ -11,9 +11,6 @@ import matplotlib.colors as colors
 from tqdm import tqdm
 import os
 import sys
-sys.path.insert(0, os.path.curdir)
-
-
 
 def visualize2D(emb_path, out_path, seed=0, sample_num=1000, acc_dyn=(0.82, 0.92)):
     ## load embedding

@@ -4,7 +4,7 @@ import numpy as np
 import logging
 import sys
 import os
-sys.path.insert(0, os.getcwd())
+
 from arch2vec.darts.cnn.genotypes import Genotype
 from arch2vec.darts.cnn.model import NetworkImageNet as Network
 from thop import profile

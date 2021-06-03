@@ -1,6 +1,6 @@
 import os
 import sys
-sys.path.insert(0, os.getcwd())
+
 from arch2vec.darts.cnn.operations import *
 from arch2vec.darts.cnn.utils import drop_path
 

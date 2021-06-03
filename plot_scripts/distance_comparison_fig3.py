@@ -1,6 +1,6 @@
 import sys
 import os
-sys.path.insert(0, os.getcwd())
+
 import numpy as np
 import json
 import random

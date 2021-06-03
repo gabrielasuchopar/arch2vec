@@ -1,6 +1,6 @@
 import os
 import sys
-sys.path.insert(0, os.getcwd())
+
 from arch2vec.pybnn.dngo import DNGO
 import random
 import argparse
