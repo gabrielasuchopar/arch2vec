@@ -19,7 +19,7 @@ from arch2vec.preprocessing.gen_json import transform_operations
 
 
 from arch2vec.models.configs import configs
-from arch2vec.utils.utils import load_json, preprocessing
+from arch2vec.utils import load_json, preprocessing
 from arch2vec.models.model import Model
 
 import pickle

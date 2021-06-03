@@ -9,7 +9,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from arch2vec.models.pretraining_nasbench101 import configs
-from arch2vec.utils.utils import load_json, preprocessing, one_hot_darts
+from arch2vec.utils import load_json, preprocessing, one_hot_darts
 from arch2vec.preprocessing.gen_isomorphism_graphs import process
 from arch2vec.models.model import Model
 from torch.distributions import MultivariateNormal

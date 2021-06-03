@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from arch2vec.models.layers import GraphConvolution
-from arch2vec.utils.utils import preprocessing, normalize_adj
+from arch2vec.utils import preprocessing, normalize_adj
 import time
 from arch2vec.gin.models.mlp import MLP
 

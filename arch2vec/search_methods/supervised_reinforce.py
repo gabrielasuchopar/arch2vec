@@ -11,7 +11,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 from arch2vec.gin.models.mlp import MLP
 from arch2vec.models.pretraining_nasbench101 import configs
-from arch2vec.utils.utils import preprocessing
+from arch2vec.utils import preprocessing
 from torch.distributions import MultivariateNormal
 
 

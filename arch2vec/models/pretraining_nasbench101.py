@@ -6,8 +6,8 @@ import torch.nn as nn
 import numpy as np
 from torch import optim
 from arch2vec.models.model import Model, VAEReconstructed_Loss
-from arch2vec.utils.utils import load_json, save_checkpoint_vae, preprocessing
-from arch2vec.utils.utils import get_val_acc_vae
+from arch2vec.utils import load_json, save_checkpoint_vae, preprocessing
+from arch2vec.utils import get_val_acc_vae
 from arch2vec.models.configs import configs
 import argparse
 from nasbench import api

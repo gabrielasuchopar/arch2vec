@@ -10,7 +10,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 from scipy import optimize
-from arch2vec.utils.utils import preprocessing
+from arch2vec.utils import preprocessing
 from arch2vec.models.configs import configs
 from arch2vec.pybnn.base_model import BaseModel
 from arch2vec.pybnn.util.normalization import zero_mean_unit_var_normalization, zero_mean_unit_var_denormalization

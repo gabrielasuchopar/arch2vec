@@ -8,8 +8,8 @@ import argparse
 from nasbench.lib import graph_util
 from torch import optim
 from arch2vec.models.model import Model, VAEReconstructed_Loss
-from arch2vec.utils.utils import load_json, save_checkpoint_vae, preprocessing, one_hot_darts, to_ops_darts
-from arch2vec.utils.utils import get_val_acc_vae, is_valid_darts
+from arch2vec.utils import load_json, save_checkpoint_vae, preprocessing, one_hot_darts, to_ops_darts
+from arch2vec.utils import get_val_acc_vae, is_valid_darts
 from arch2vec.models.configs import configs
 
 
