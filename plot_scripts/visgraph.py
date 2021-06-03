@@ -12,9 +12,9 @@ import matplotlib.image as mpimg
 import os
 import sys
 sys.path.insert(0, os.getcwd())
-import darts.cnn.genotypes
+import arch2vec.darts.cnn.genotypes
 from plot_scripts import draw_darts
-from utils.utils import load_json
+from arch2vec.utils.utils import load_json
 
 # ### example of plat DAG
 # adj = torch.tensor([[0, 1, 0, 0, 0, 0, 1],

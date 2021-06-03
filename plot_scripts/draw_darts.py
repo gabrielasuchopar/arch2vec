@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.insert(0, os.getcwd())
-import darts.cnn.genotypes
+import arch2vec.darts.cnn.genotypes
 from graphviz import Digraph
 
 

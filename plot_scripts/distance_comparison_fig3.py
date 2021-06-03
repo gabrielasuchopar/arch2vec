@@ -15,12 +15,12 @@ from tabular_benchmarks import NASCifar10A, NASCifar10B, NASCifar10C
 from ConfigSpace.util import get_one_exchange_neighbourhood
 from nasbench.lib import graph_util
 from nasbench import api
-from preprocessing.gen_json import transform_operations
+from arch2vec.preprocessing.gen_json import transform_operations
 
 
-from models.configs import configs
-from utils.utils import load_json, preprocessing
-from models.model import Model
+from arch2vec.models.configs import configs
+from arch2vec.utils.utils import load_json, preprocessing
+from arch2vec.models.model import Model
 
 import pickle
 import seaborn
