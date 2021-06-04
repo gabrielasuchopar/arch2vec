@@ -122,7 +122,7 @@ def eval_validity_and_uniqueness(model, z_mean, z_std, nasbench, n_latent_points
     return validity, uniqueness
 
 
-def get_validation_accuracy(model, X_adj, X_ops, indices, n_validation, config=4, device=None):
+def eval_validation_accuracy(model, X_adj, X_ops, indices, n_validation, config=4, device=None):
     model.eval()
     config = configs[config]
     correct_ops_ave, mean_correct_adj_ave, mean_false_positive_adj_ave, correct_adj_ave, acc_ave = 0, 0, 0, 0, 0
