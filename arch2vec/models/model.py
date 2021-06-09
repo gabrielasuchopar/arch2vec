@@ -45,7 +45,7 @@ class GIN(nn.Module):
 
 class Model(nn.Module):
     def __init__(self, input_dim, hidden_dim, latent_dim, num_hops, num_mlp_layers,
-                 dropout, **kwargs):
+                 dropout, return_z=False, **kwargs):
         super(Model, self).__init__()
         self.input_dim = input_dim
         self.hidden_dim = hidden_dim
@@ -64,6 +64,9 @@ class Model(nn.Module):
         self.fc1 = nn.Linear(self.hidden_dim, self.latent_dim)
         self.fc2 = nn.Linear(self.hidden_dim, self.latent_dim)
         self.decoder = Decoder(self.latent_dim, self.input_dim, dropout, **kwargs)
+
+        # return sampled latent vector in forward
+        self.return_z = return_z
 
     def reparameterize(self, mu, logvar):
         if self.training:
@@ -89,7 +92,11 @@ class Model(nn.Module):
         mu, logvar = self._encoder(ops, adj)
         z = self.reparameterize(mu, logvar)
         ops_recon, adj_recon = self.decoder(z)
-        return ops_recon, adj_recon, mu, logvar
+
+        if not self.return_z:
+            return ops_recon, adj_recon, mu, logvar
+
+        return ops_recon, adj_recon, mu, logvar, z
 
 class GAE(nn.Module):
     def __init__(self, dims, normalize, reg_emb, reg_dec_l2, reg_dec_gp, dropout, **kwargs):
