@@ -93,14 +93,18 @@ def transform_operations(ops):
     return ops_array
 
 
-def gen_json_file():
-    nasbench = api.NASBench(NASBENCH_TFRECORD)
+def gen_json_file(nasbench_path=None):
+    nasbench_path = nasbench_path if nasbench_path is not None else NASBENCH_TFRECORD
+
+    nasbench = api.NASBench(nasbench_path)
     nas_gen = gen_data_point(nasbench)
     data_dict = OrderedDict()
     for data_point in nas_gen:
         data_dict.update(data_point)
     with open('data/data.json', 'w') as outfile:
         json.dump(data_dict, outfile)
+
+    return data_dict
 
 
 if __name__ == '__main__':
