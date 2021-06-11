@@ -17,8 +17,18 @@ def _build_nasbench_dataset(dataset, ind_list):
     X_adj = []
     X_ops = []
 
+    try:
+        # json loaded dataset has str keys
+        dataset[str(indices[0])]
+        use_ints = False
+    except KeyError:
+        use_ints = True
+
     for ind in indices:
-        data_point = dataset[str(ind)]
+        if use_ints:
+            data_point = dataset[ind]
+        else:
+            data_point = dataset[str(ind)]
 
         hash_list.append(data_point['hash'])
         X_adj.append(torch.Tensor(data_point['module_adjacency']))

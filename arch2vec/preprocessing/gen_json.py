@@ -22,6 +22,7 @@ MAXPOOL3X3 = 'maxpool3x3'
 def gen_data_point(nasbench):
     i = 0
     epoch = 108
+    print_frequency = 1000
 
     padding = [0, 0, 0, 0, 0, 0, 0]
     best_val_acc = 0
@@ -29,7 +30,9 @@ def gen_data_point(nasbench):
 
     for unique_hash in nasbench.hash_iterator():
         fixed_metrics, computed_metrics = nasbench.get_metrics_from_hash(unique_hash)
-        print('\nIterating over {} / {} unique models in the dataset.'.format(i, 423623))
+
+        if (i % print_frequency) == 0:
+            print('\nIterating over {} / {} unique models in the dataset.'.format(i, 423623))
 
         test_acc_avg = 0.0
         val_acc_avg = 0.0
@@ -51,8 +54,10 @@ def gen_data_point(nasbench):
         model_spec = api.ModelSpec(fixed_metrics['module_adjacency'], fixed_metrics['module_operations'])
 
         data = nasbench.query(model_spec, epochs=108)
-        print('api training time: {}'.format(data['training_time']))
-        print('real training time: {}'.format(training_time_avg))
+
+        if (i % print_frequency) == 0:
+            print('api training time: {}'.format(data['training_time']))
+            print('real training time: {}'.format(training_time_avg))
 
         # pad zero to adjacent matrix that has nodes less than 7
         if len(adj_array) <= 6:
@@ -68,7 +73,8 @@ def gen_data_point(nasbench):
         if test_acc_avg > best_test_acc:
             best_test_acc = test_acc_avg
 
-        print('best val. acc: {:.4f}, best test acc {:.4f}'.format(best_val_acc, best_test_acc))
+        if (i % print_frequency) == 0:
+            print('best val. acc: {:.4f}, best test acc {:.4f}'.format(best_val_acc, best_test_acc))
 
         yield {i:  # unique_hash
             {
