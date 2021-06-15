@@ -132,12 +132,12 @@ def eval_validity_and_uniqueness(model, z_mean, z_std, nasbench, n_latent_points
     return validity, uniqueness
 
 
-def eval_validation_accuracy(model, X_adj, X_ops, indices, n_validation, config=4, device=None):
+def eval_validation_accuracy(model, X_adj, X_ops, n_validation, config=4, device=None):
     model.eval()
     config = configs[config]
     correct_ops_ave, mean_correct_adj_ave, mean_false_positive_adj_ave, correct_adj_ave, acc_ave = 0, 0, 0, 0, 0
 
-    for i, (adj, ops, ind) in enumerate(zip(X_adj, X_ops, indices)):
+    for i, (adj, ops) in enumerate(zip(X_adj, X_ops)):
         adj, ops = adj.to(device), ops.to(device)
 
         # preprocessing
@@ -152,7 +152,7 @@ def eval_validation_accuracy(model, X_adj, X_ops, indices, n_validation, config=
         correct_ops, mean_correct_adj, mean_false_positive_adj, correct_adj = get_accuracy((ops_recon, adj_recon),
                                                                                            (ops, adj))
         # average stats
-        fraction = len(ind) / n_validation
+        fraction = len(adj) / n_validation
 
         correct_ops_ave += correct_ops * fraction
         mean_correct_adj_ave += mean_correct_adj * fraction
