@@ -133,12 +133,13 @@ def eval_validity_and_uniqueness(model, z_mean, z_std, nasbench, n_latent_points
     return validity, uniqueness
 
 
-def eval_validation_accuracy(model, X_adj, X_ops, n_validation, config=4, device=None):
+def eval_validation_accuracy(model, val_dataset, config=4, device=None):
     model.eval()
     config = configs[config]
     correct_ops_ave, mean_correct_adj_ave, mean_false_positive_adj_ave, correct_adj_ave, acc_ave = 0, 0, 0, 0, 0
+    n_validation = len(val_dataset)
 
-    for i, (adj, ops) in enumerate(zip(X_adj, X_ops)):
+    for i, (adj, ops) in enumerate(val_dataset):
         adj, ops = adj.to(device), ops.to(device)
 
         # preprocessing
