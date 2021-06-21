@@ -95,7 +95,7 @@ def get_arch2vec_model(device=None, input_dim=5, hidden_dim=128, latent_dim=16, 
     return model, optimizer
 
 
-def eval_validity_and_uniqueness(model, z_mean, z_std, nasbench, n_latent_points=10000, latent_dim=5, device=None):
+def eval_validity_and_uniqueness(model, z_mean, z_std, nasbench, n_latent_points=10000, latent_dim=16, device=None):
     validity_counter = 0
     buckets = {}
 
@@ -135,7 +135,9 @@ def eval_validity_and_uniqueness(model, z_mean, z_std, nasbench, n_latent_points
 
 def eval_validation_accuracy(model, val_dataset, config=4, device=None):
     model.eval()
-    config = configs[config]
+    if isinstance(config, int):
+        config = configs[config]
+
     correct_ops_ave, mean_correct_adj_ave, mean_false_positive_adj_ave, correct_adj_ave, acc_ave = 0, 0, 0, 0, 0
     n_validation = len(val_dataset)
 
@@ -146,7 +148,7 @@ def eval_validation_accuracy(model, val_dataset, config=4, device=None):
         adj, ops, prep_reverse = preprocessing(adj, ops, **config['prep'])
 
         # forward
-        ops_recon, adj_recon, mu, logvar = model.forward(ops, adj)
+        ops_recon, adj_recon, mu, logvar, _ = model.forward(ops, adj)
 
         # reverse preprocessing
         adj_recon, ops_recon = prep_reverse(adj_recon, ops_recon)
