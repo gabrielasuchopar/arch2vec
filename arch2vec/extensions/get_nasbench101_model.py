@@ -87,7 +87,8 @@ def get_arch2vec_model(device=None, input_dim=5, hidden_dim=128, latent_dim=16, 
     config = configs[config]
 
     model = Model(input_dim=input_dim, hidden_dim=hidden_dim, latent_dim=latent_dim,
-                  num_hops=num_layers, num_mlp_layers=num_mlps, dropout=dropout, **config['GAE']).to(device)
+                  num_hops=num_layers, num_mlp_layers=num_mlps, dropout=dropout,
+                  return_z=True, **config['GAE']).to(device)
 
     optimizer = optim.Adam(model.parameters(), lr=1e-3, betas=(0.9, 0.999), eps=1e-08)
 
