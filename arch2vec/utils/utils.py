@@ -120,7 +120,7 @@ def get_accuracy(inputs, targets):
 
     ops_correct = ops_recon.argmax(dim=-1).eq(ops.argmax(dim=-1)).float()
     adj_correct = adj_recon_thre.eq(adj.type(torch.bool)).float()
-    return correct_ops, mean_correct_adj, mean_false_positive_adj, correct_adj
+    return correct_ops, mean_correct_adj.item(), mean_false_positive_adj.item(), correct_adj
 
 def get_train_acc(inputs, targets):
     acc_train = get_accuracy(inputs, targets)
