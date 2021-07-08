@@ -28,7 +28,7 @@ def save_checkpoint(model, optimizer, epoch, loss, dim, name, dropout, seed):
     torch.save(checkpoint, f_path)
 
 
-def save_checkpoint_vae(model, optimizer, epoch, loss, dim, name, dropout, seed):
+def save_checkpoint_vae(model, optimizer, epoch, loss, dim, name, dropout, seed, f_path=None):
     """Saves a checkpoint."""
     # Record the state
     checkpoint = {
@@ -37,11 +37,13 @@ def save_checkpoint_vae(model, optimizer, epoch, loss, dim, name, dropout, seed)
         'model_state': model.state_dict(),
         'optimizer_state': optimizer.state_dict(),
     }
-    # Write the checkpoint
-    dir_name = 'pretrained/dim-{}'.format(dim)
-    if not os.path.exists(dir_name):
-        os.makedirs(dir_name)
-    f_path = os.path.join(dir_name, 'model-{}.pt'.format(name))
+    if f_path is None:
+        # Write the checkpoint
+        dir_name = 'pretrained/dim-{}'.format(dim)
+        if not os.path.exists(dir_name):
+            os.makedirs(dir_name)
+        f_path = os.path.join(dir_name, 'model-{}.pt'.format(name))
+
     torch.save(checkpoint, f_path)
 
 def normalize_adj(A):
