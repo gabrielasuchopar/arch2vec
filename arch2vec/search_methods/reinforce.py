@@ -15,12 +15,14 @@ from arch2vec.models.model import Model
 from torch.distributions import MultivariateNormal
 
 class Env(object):
-    def __init__(self, name, seed, emb_path, model_path, cfg, data_path=None, save=False):
+    def __init__(self, name, seed, emb_path, model_path, cfg, data_path=None, save=False, dir_name=None,
+                 save_path=None):
         self.name = name
         self.model_path = model_path
         self.emb_path = emb_path
+        self.save_path = save_path
         self.seed = seed
-        self.dir_name = 'pretrained/dim-{}'.format(args.dim)
+        self.dir_name = 'pretrained/dim-{}'.format(args.dim) if dir_name is None else dir_name
         self.visited = {}
         self.features = []
         self.embedding = {}
@@ -37,20 +39,34 @@ class Env(object):
             self.model.eval()
             with torch.no_grad():
                 print("length of the dataset: {}".format(len(dataset)))
-                self.f_path = os.path.join(self.dir_name, 'arch2vec-{}'.format(self.model_path))
+
+                if self.save_path is None:
+                    self.f_path = os.path.join(self.dir_name, 'arch2vec-{}'.format(self.model_path))
+                else:
+                    self.f_path = os.path.join(self.dir_name, self.save_path)
+
                 if os.path.exists(self.f_path):
                     print('{} is already saved'.format(self.f_path))
                     exit()
+
                 print('save to {}'.format(self.f_path))
+
                 for ind in range(len(dataset)):
                     adj = torch.Tensor(dataset[str(ind)]['module_adjacency']).unsqueeze(0).cuda()
                     ops = torch.Tensor(dataset[str(ind)]['module_operations']).unsqueeze(0).cuda()
                     adj, ops, prep_reverse = preprocessing(adj, ops, **cfg['prep'])
+
                     test_acc = dataset[str(ind)]['test_accuracy']
                     valid_acc = dataset[str(ind)]['validation_accuracy']
                     time = dataset[str(ind)]['training_time']
+
                     x,_ = self.model._encoder(ops, adj)
-                    self.embedding[ind] = {'feature': x.squeeze(0).mean(dim=0).cpu(), 'valid_accuracy': float(valid_acc), 'test_accuracy': float(test_acc), 'time': float(time)}
+
+                    self.embedding[ind] = {
+                        'feature': x.squeeze(0).mean(dim=0).cpu(), 'valid_accuracy': float(valid_acc),
+                        'test_accuracy': float(test_acc), 'time': float(time)
+                    }
+
                 torch.save(self.embedding, self.f_path)
                 print("finish arch2vec extraction")
                 exit()
@@ -205,9 +221,15 @@ def reinforce_search(env, args):
     res['regret_validation'] = valid_trace
     res['regret_test'] = test_trace
     res['runtime'] = time_trace
-    save_path = os.path.join(args.output_path, 'dim{}'.format(args.dim))
+
+    if env.dir_name is None:
+        save_path = os.path.join(args.output_path, 'dim{}'.format(args.dim))
+    else:
+        save_path = os.path.join(env.dir_name, 'reinforce-runs/')
+
     if not os.path.exists(save_path):
         os.mkdir(save_path)
+
     print('save to {}'.format(save_path))
     if args.emb_path.endswith('.pt'):
         s = args.emb_path[:-3]
@@ -228,9 +250,13 @@ if __name__ == '__main__':
     parser.add_argument('--emb_path', type=str, default='arch2vec.pt')
     parser.add_argument('--model_path', type=str, default='model-nasbench-101.pt')
     parser.add_argument('--saved_arch2vec', action="store_true", default=False)
+    parser.add_argument('--dir_name', default=None)
+    parser.add_argument('--save_path', default=None)
+    parser.add_argument('--data_path', default='data/data.json')
     args = parser.parse_args()
     cfg = configs[args.cfg]
-    env = Env('REINFORCE', args.seed, args.emb_path, args.model_path, cfg, data_path='data/data.json', save=args.saved_arch2vec)
+    env = Env('REINFORCE', args.seed, args.emb_path, args.model_path, cfg, data_path=args.data_path,
+              save=args.saved_arch2vec, dir_name=args.dir_name, save_path=args.save_path)
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
     torch.cuda.manual_seed_all(args.seed)
