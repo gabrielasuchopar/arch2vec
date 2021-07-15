@@ -139,7 +139,8 @@ def eval_validation_accuracy(model, val_dataset, config=4, device=None):
         config = configs[config]
 
     correct_ops_ave, mean_correct_adj_ave, mean_false_positive_adj_ave, correct_adj_ave, acc_ave = 0, 0, 0, 0, 0
-    n_validation = len(val_dataset)
+
+    n_validation = 0
 
     for i, (adj, ops) in enumerate(val_dataset):
         adj, ops = adj.to(device), ops.to(device)
@@ -156,11 +157,14 @@ def eval_validation_accuracy(model, val_dataset, config=4, device=None):
         correct_ops, mean_correct_adj, mean_false_positive_adj, correct_adj = get_accuracy((ops_recon, adj_recon),
                                                                                            (ops, adj))
         # average stats
-        fraction = len(adj) / n_validation
+        adj_len = len(adj)
 
-        correct_ops_ave += correct_ops * fraction
-        mean_correct_adj_ave += mean_correct_adj * fraction
-        mean_false_positive_adj_ave += mean_false_positive_adj * fraction
-        correct_adj_ave += correct_adj * fraction
+        correct_ops_ave += correct_ops * adj_len
+        mean_correct_adj_ave += mean_correct_adj * adj_len
+        mean_false_positive_adj_ave += mean_false_positive_adj * adj_len
+        correct_adj_ave += correct_adj * adj_len
 
-    return correct_ops_ave, mean_correct_adj_ave, mean_false_positive_adj_ave, correct_adj_ave
+        n_validation += adj_len
+
+    return correct_ops_ave / n_validation, mean_correct_adj_ave / n_validation, \
+        mean_false_positive_adj_ave / n_validation, correct_adj_ave / n_validation
