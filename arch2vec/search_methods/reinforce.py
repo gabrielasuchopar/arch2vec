@@ -60,9 +60,12 @@ class Env(object):
                     valid_acc = dataset[str(ind)]['validation_accuracy']
                     time = dataset[str(ind)]['training_time']
 
+                    net_hash = dataset[str(ind)]['hash']
+
                     x,_ = self.model._encoder(ops, adj)
 
                     self.embedding[ind] = {
+                        'hash': net_hash,
                         'feature': x.squeeze(0).mean(dim=0).cpu(), 'valid_accuracy': float(valid_acc),
                         'test_accuracy': float(test_acc), 'time': float(time)
                     }
