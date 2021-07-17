@@ -32,6 +32,7 @@ class Env(object):
         if not save:
             print("extract arch2vec from {}".format(os.path.join(self.dir_name, self.model_path)))
             if not os.path.exists(os.path.join(self.dir_name, self.model_path)):
+                print("Arch2vec path does not exist.")
                 exit()
             dataset = load_json(data_path)
             self.model = Model(input_dim=5, hidden_dim=128, latent_dim=16, num_hops=5, num_mlp_layers=2, dropout=0, **cfg['GAE']).cuda()
@@ -52,6 +53,9 @@ class Env(object):
                 print('save to {}'.format(self.f_path))
 
                 for ind in range(len(dataset)):
+                    if ind % 1000 == 0:
+                        print(ind)
+
                     adj = torch.Tensor(dataset[str(ind)]['module_adjacency']).unsqueeze(0).cuda()
                     ops = torch.Tensor(dataset[str(ind)]['module_operations']).unsqueeze(0).cuda()
                     adj, ops, prep_reverse = preprocessing(adj, ops, **cfg['prep'])
@@ -225,7 +229,7 @@ def reinforce_search(env, args):
     res['regret_test'] = test_trace
     res['runtime'] = time_trace
 
-    if env.dir_name is None:
+    if args.dir_name is None:
         save_path = os.path.join(args.output_path, 'dim{}'.format(args.dim))
     else:
         save_path = os.path.join(env.dir_name, 'reinforce-runs/')
@@ -239,7 +243,6 @@ def reinforce_search(env, args):
     fh = open(os.path.join(save_path, 'run_{}_{}.json'.format(args.seed, s)),'w')
     json.dump(res, fh)
     fh.close()
-
 
 
 if __name__ == '__main__':

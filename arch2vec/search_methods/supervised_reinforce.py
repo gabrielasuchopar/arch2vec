@@ -226,7 +226,7 @@ def reinforce_search(X_adj, X_ops, Y, Y_test, training_time, env, args):
     res['regret_test'] = test_trace
     res['runtime'] = time_trace
     save_path = os.path.join(args.output_path, 'dim{}'.format(args.dim))
-    if not os.path.exists(save_path):
+    if not os.path.exists(save_path):  # TODO
         os.mkdir(save_path)
     fh = open(os.path.join(save_path, 'run_{}_{}.json'.format(args.seed, 'supervised_rl')),'w')
     json.dump(res, fh)
@@ -244,7 +244,7 @@ if __name__ == '__main__':
     parser.add_argument('--output_path', type=str, default='saved_logs/rl', help='rl')
     args = parser.parse_args()
     cfg = configs[args.cfg]
-    X_adj, X_ops, Y, Y_test, training_time = extract_data('data/data.json')
+    X_adj, X_ops, Y, Y_test, training_time = extract_data('../../info-nas/data/nb_dataset.json')
     env = Env('REINFORCE', args.seed)
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)

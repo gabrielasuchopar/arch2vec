@@ -119,7 +119,7 @@ class DNGO(BaseModel):
         self.hypers = None
 
     @BaseModel._check_shapes_train
-    def train(self, X, y, do_optimize=True):
+    def train(self, X, y, do_optimize=True, device=None):
         """
         Trains the model on the provided data.
 
@@ -160,7 +160,7 @@ class DNGO(BaseModel):
         # Create the neural network
         features = X.shape[1]
 
-        self.network = Net(n_inputs=features, n_units=[self.n_units])
+        self.network = Net(n_inputs=features, n_units=[self.n_units]).to(device)
 
         optimizer = optim.Adam(self.network.parameters(),
                                lr=self.init_learning_rate)
@@ -180,12 +180,12 @@ class DNGO(BaseModel):
                 targets = torch.Tensor(batch[1])
 
                 optimizer.zero_grad()
-                output = self.network(inputs)
-                loss = torch.nn.functional.mse_loss(output, targets)
+                output = self.network(inputs.to(device))
+                loss = torch.nn.functional.mse_loss(output, targets.to(device))
                 loss.backward()
                 optimizer.step()
 
-                train_err += loss
+                train_err += loss.item()
                 train_batches += 1
             lc[epoch] = train_err / train_batches
             logging.debug("Epoch {} of {}".format(epoch + 1, self.num_epochs))
@@ -196,7 +196,7 @@ class DNGO(BaseModel):
             logging.debug("Training loss:\t\t{:.5g}".format(train_err / train_batches))
 
         # Design matrix
-        self.Theta = self.network.basis_funcs(torch.Tensor(self.X)).data.numpy()
+        self.Theta = self.network.basis_funcs(torch.Tensor(self.X).to(device)).data.cpu().numpy()
 
         if do_optimize:
             if self.do_mcmc:
@@ -326,7 +326,7 @@ class DNGO(BaseModel):
             yield inputs[excerpt], targets[excerpt]
 
     @BaseModel._check_shapes_predict
-    def predict(self, X_test):
+    def predict(self, X_test, device=None):
         r"""
         Returns the predictive mean and variance of the objective function at
         the given test points.
@@ -352,7 +352,7 @@ class DNGO(BaseModel):
 
         # Get features from the net
 
-        theta = self.network.basis_funcs(torch.Tensor(X_)).data.numpy()
+        theta = self.network.basis_funcs(torch.Tensor(X_).to(device)).data.cpu().numpy()
 
         # Marginalise predictions over hyperparameters of the BLR
         mu = np.zeros([len(self.models), X_test.shape[0]])

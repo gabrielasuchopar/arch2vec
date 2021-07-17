@@ -11,8 +11,9 @@ from torch.distributions import Normal
 
 
 def load_arch2vec(embedding_path):
-    embedding = torch.load(embedding_path)
     print('load arch2vec from {}'.format(embedding_path))
+    embedding = torch.load(embedding_path)
+
     ind_list = range(len(embedding))
     features = [embedding[ind]['feature'] for ind in ind_list]
     valid_labels = [embedding[ind]['valid_accuracy'] for ind in ind_list]
@@ -65,7 +66,13 @@ def expected_improvement_search():
     rt = 0.
     visited = {}
     best_trace = defaultdict(list)
-    features, valid_labels, test_labels, training_time = load_arch2vec(os.path.join('pretrained/dim-{}'.format(args.dim), args.emb_path))
+
+    if args.dir_name is not None:
+        embedding_path = os.path.join(args.dir_name, args.emb_path)
+    else:
+        embedding_path = os.path.join('pretrained/dim-{}'.format(args.dim), args.emb_path)
+
+    features, valid_labels, test_labels, training_time = load_arch2vec(embedding_path)
     features, valid_labels, test_labels, training_time = features.cpu().detach(), valid_labels.cpu().detach(), test_labels.cpu().detach(), training_time.cpu().detach()
     feat_samples, valid_label_samples, test_label_samples, time_samples, visited = get_init_samples(features, valid_labels, test_labels, training_time, visited)
 
@@ -90,7 +97,7 @@ def expected_improvement_search():
         print(feat_samples.shape)
         print(valid_label_samples.shape)
         model = DNGO(num_epochs=100, n_units=128, do_mcmc=False, normalize_output=False, rng=args.seed)
-        model.train(X=feat_samples.numpy(), y=valid_label_samples.view(-1).numpy(), do_optimize=True)
+        model.train(X=feat_samples.numpy(), y=valid_label_samples.view(-1).numpy(), do_optimize=True, device=args.device)
         print(model.network)
         m = []
         v = []
@@ -99,7 +106,7 @@ def expected_improvement_search():
             chunks += 1
         features_split = torch.split(features, window_size, dim=0)
         for i in range(chunks):
-            m_split, v_split = model.predict(features_split[i].numpy())
+            m_split, v_split = model.predict(features_split[i].numpy(), device=args.device)
             m.extend(list(m_split))
             v.extend(list(v_split))
         mean = torch.Tensor(m)
@@ -133,10 +140,17 @@ def expected_improvement_search():
     res['regret_test'] = best_trace['regret_test']
     res['runtime'] = best_trace['time']
     res['counter'] = best_trace['counter']
-    save_path = os.path.join(args.output_path, 'dim{}'.format(args.dim))
+
+    if args.dir_name is None:
+        save_path = os.path.join(args.output_path, 'dim{}'.format(args.dim))
+    else:
+        save_path = os.path.join(args.dir_name, 'dngo-runs/')
+
     if not os.path.exists(save_path):
         os.mkdir(save_path)
+
     print('save to {}'.format(save_path))
+
     if args.emb_path.endswith('.pt'):
         s = args.emb_path[:-3]
     fh = open(os.path.join(save_path, 'run_{}_{}.json'.format(args.seed, s)),'w')
@@ -153,6 +167,8 @@ if __name__ == '__main__':
     parser.add_argument('--topk', type=int, default=5, help='acquisition samples')
     parser.add_argument('--output_path', type=str, default='bo', help='bo')
     parser.add_argument('--emb_path', type=str, default='arch2vec.pt')
+    parser.add_argument('--dir_name', default=None)
+    parser.add_argument('--device', default='cuda')
     args = parser.parse_args()
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
