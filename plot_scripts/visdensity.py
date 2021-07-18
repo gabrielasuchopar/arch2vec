@@ -467,12 +467,18 @@ if __name__ == '__main__':
     parser.add_argument('--supervised_emb_path', type=str, metavar='PATH',
                         default=None, help='supervised embedding file (default: None)')
     parser.add_argument('--output_path', type=str, default=None, metavar='PATH', help='output path')
+    parser.add_argument('--dir_name', type=str, default=None, help='directory of other paths')
     parser.add_argument('--seed', type=int, default=0)
     parser.add_argument('--sample_nums', type=int, default=10000, metavar='N',
                         help='sample points, -1 means all (default: 10000)')
     parser.add_argument('--acc_dyn', type=tuple, default=(0.82, 0.92), metavar='TUPLE',
                         help='major dynamics of test accuracy (default: (0.82, 0.92))')
     args = parser.parse_args()
+
+    if args.dir_name is not None:
+        args.output_path = args.dir_name
+        args.emb_path = os.path.join(args.dir_name, args.emb_path)
+
     if not os.path.exists(args.output_path):
-        os.makedirs(args.output_path)
+        os.mkdir(args.output_path)
     visualize2D(args.emb_path, args.output_path, args.seed, args.sample_nums, args.acc_dyn)
