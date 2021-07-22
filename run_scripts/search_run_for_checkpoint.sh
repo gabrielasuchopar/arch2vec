@@ -29,11 +29,22 @@ else
   more_args="--init_size 16 --topk 5"
 fi
 
-# run the search algorithm
-echo "Running search algorithm $algo."
-for s in $(seq 1 $num)
-	do
+if [ $num -ne 0 ]; then
+  # run the search algorithm
+  echo "Running search algorithm $algo."
+  for s in $(seq 1 $num)
+	  do
 	    echo $s
+	    run_fname=`echo -n $embedding_path | sed "s/.pt/.json/"`
+	    echo "$dir""$algo"-runs/run_"$s"_"$run_fname"
+	    if [ -f "$dir"/"$algo"-runs/run_"$s"_"$run_fname" ]; then
+	      echo "Skipping"
+	      continue
+	    fi
+
       python $script_name --dim 16 --seed $s $more_args \
         --emb_path $embedding_path --dir_name $dir
-  done
+    done
+else
+  echo "Finished feature extraction."
+fi

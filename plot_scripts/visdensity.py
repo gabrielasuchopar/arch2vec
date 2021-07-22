@@ -12,7 +12,7 @@ from tqdm import tqdm
 import os
 import sys
 
-def visualize2D(emb_path, out_path, seed=0, sample_num=1000, acc_dyn=(0.82, 0.92)):
+def visualize2D(emb_path, out_path, seed=0, sample_num=1000, acc_dyn=(0.82, 0.92), title=''):
     ## load embedding
     dataset = torch.load(emb_path)
     _, emb_name = os.path.split(emb_path)
@@ -452,7 +452,6 @@ def distribution(emb_path, sup_emb_path, sample_num, seed):
     cbar.set_ticks([])
     cbar.set_ticklabels([])
     cbar.set_label('Density')
-    plt.tight_layout()
     plt.savefig('density_compare.pdf', bbox_inches='tight')
     plt.show()
 
@@ -469,6 +468,7 @@ if __name__ == '__main__':
     parser.add_argument('--output_path', type=str, default=None, metavar='PATH', help='output path')
     parser.add_argument('--dir_name', type=str, default=None, help='directory of other paths')
     parser.add_argument('--seed', type=int, default=0)
+    parser.add_argument('--title', type=str, default='')
     parser.add_argument('--sample_nums', type=int, default=10000, metavar='N',
                         help='sample points, -1 means all (default: 10000)')
     parser.add_argument('--acc_dyn', type=tuple, default=(0.82, 0.92), metavar='TUPLE',
@@ -481,4 +481,4 @@ if __name__ == '__main__':
 
     if not os.path.exists(args.output_path):
         os.mkdir(args.output_path)
-    visualize2D(args.emb_path, args.output_path, args.seed, args.sample_nums, args.acc_dyn)
+    visualize2D(args.emb_path, args.output_path, args.seed, args.sample_nums, args.acc_dyn, title=args.title)
