@@ -1,5 +1,5 @@
 """API source: https://github.com/D-X-Y/NAS-Bench-201/blob/v1.1/nas_201_api/api.py"""
-from api import NASBench201API as API
+from arch2vec.preprocessing.api import NASBench201API as API
 import numpy as np
 import json
 from collections import OrderedDict

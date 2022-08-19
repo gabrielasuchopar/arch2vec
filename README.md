@@ -23,14 +23,14 @@ pip install -r requirements.txt
 Install [nasbench](https://github.com/google-research/nasbench) and download [nasbench_only108.tfrecord](https://storage.googleapis.com/nasbench/nasbench_only108.tfrecord) under `./data` folder.
 
 ```bash
-python preprocessing/gen_json.py
+python arch2vec/preprocessing/gen_json.py
 ```
 
 Data will be saved in `./data/data.json`.
 
 ### Pretraining
 ```bash
-bash models/pretraining_nasbench101.sh
+bash arch2vec/models/pretraining_nasbench101.sh
 ```
 
 The pretrained model will be saved in `./pretrained/dim-16/`.
@@ -89,13 +89,13 @@ python plot_scripts/plot_cdf.py
 ### Dataset preparation
 Download the [NAS-Bench-201-v1_0-e61699.pth](https://drive.google.com/file/d/1SKW0Cu0u8-gb18zDpaAGi0f74UdXeGKs/view) under `./data` folder. 
 ```bash
-python preprocessing/nasbench201_json.py
+python arch2vec/preprocessing/nasbench201_json.py
 ```
 Data corresponding to the three datasets in NAS-Bench-201 will be saved in folder `./data/` as `cifar10_valid_converged.json`, `cifar100.json`, `ImageNet16_120.json`.
 
 ### Pretraining
 ```bash
-bash models/pretraining_nasbench201.sh
+bash arch2vec/models/pretraining_nasbench201.sh
 ```
 The pretrained model will be saved in `./pretrained/dim-16/`.
 
@@ -137,7 +137,7 @@ CIFAR-10 can be automatically downloaded by torchvision, ImageNet needs to be ma
 
 ### Random sampling 600,000 isomorphic graphs in DARTS space
 ```bash
-python preprocessing/gen_isomorphism_graphs.py
+python arch2vec/preprocessing/gen_isomorphism_graphs.py
 ```
 Data will be saved in `./data/data_darts_counter600000.json`.
 
@@ -145,7 +145,7 @@ Alternatively, you can download the extracted [data_darts_counter600000.json](ht
 
 ### Pretraining
 ```bash
-bash models/pretraining_darts.sh
+bash arch2vec/models/pretraining_darts.sh
 ```
 The pretrained model is saved in `./pretrained/dim-16/`.
 
@@ -175,8 +175,8 @@ Final search result will be saved in `./saved_logs/bo/dim16`.
 
 ### Evaluate the learned cell on DARTS Search Space on CIFAR-10
 ```bash
-python darts/cnn/train.py --auxiliary --cutout --arch arch2vec_rl --seed 1
-python darts/cnn/train.py --auxiliary --cutout --arch arch2vec_bo --seed 1
+python arch2vec/darts/cnn/train.py --auxiliary --cutout --arch arch2vec_rl --seed 1
+python arch2vec/darts/cnn/train.py --auxiliary --cutout --arch arch2vec_bo --seed 1
 ```
 - Expected results (RL): 2.60\% test error with 3.3M model params.
 - Expected results (BO): 2.48\% test error with 3.6M model params.
@@ -184,8 +184,8 @@ python darts/cnn/train.py --auxiliary --cutout --arch arch2vec_bo --seed 1
 
 ### Transfer learning on ImageNet
 ```bash
-python darts/cnn/train_imagenet.py  --arch arch2vec_rl --seed 1 
-python darts/cnn/train_imagenet.py  --arch arch2vec_bo --seed 1
+python arch2vec/darts/cnn/train_imagenet.py  --arch arch2vec_rl --seed 1 
+python arch2vec/darts/cnn/train_imagenet.py  --arch arch2vec_bo --seed 1
 ```
 - Expected results (RL): 25.8\% test error with 4.8M model params and 533M mult-adds.
 - Expected results (RL): 25.5\% test error with 5.2M model params and 580M mult-adds.
@@ -193,8 +193,8 @@ python darts/cnn/train_imagenet.py  --arch arch2vec_bo --seed 1
 
 ### Visualize the learned cell
 ```bash
-python darts/cnn/visualize.py arch2vec_rl
-python darts/cnn/visualize.py arch2vec_bo
+python arch2vec/darts/cnn/visualize.py arch2vec_rl
+python arch2vec/darts/cnn/visualize.py arch2vec_bo
 ```
 
 ## 5. Analyzing the results 

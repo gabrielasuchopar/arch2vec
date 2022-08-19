@@ -1,5 +1,5 @@
 import sys
-import genotypes
+import arch2vec.darts.cnn.genotypes as genotypes
 from graphviz import Digraph
 
 

@@ -9,7 +9,7 @@ import torch
 import arch2vec.darts.cnn.utils as utils
 import logging
 import torch.nn as nn
-import arch2vec.darts.cnn.genotypes
+import arch2vec.darts.cnn.genotypes as genotypes
 import torch.utils
 import torchvision.datasets as dset
 import torch.backends.cudnn as cudnn

@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-python search_methods/reinforce_darts.py --dim 16
+python arch2vec/search_methods/reinforce_darts.py --dim 16
