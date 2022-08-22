@@ -1,3 +1,5 @@
 arch2vec.egg-info/*
 *.pt
 arch2vec/models/pretrained/
+saved_logs/*
+

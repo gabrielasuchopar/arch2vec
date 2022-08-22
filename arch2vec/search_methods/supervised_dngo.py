@@ -149,7 +149,7 @@ def supervised_encoding_search(X_adj, X_ops, Y, Y_test, training_time):
     res['counter'] = best_trace['counter']
     save_path = os.path.join(args.output_path, 'dim{}'.format(args.dim))
     if not os.path.exists(save_path):
-        os.mkdir(save_path)
+        os.makedirs(save_path)
     print('save to {}'.format(save_path))
     fh = open(os.path.join(save_path, 'run_{}_{}.json'.format(args.seed, args.benchmark)), 'w')
     json.dump(res, fh)

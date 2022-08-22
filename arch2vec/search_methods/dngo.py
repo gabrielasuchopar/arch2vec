@@ -142,6 +142,8 @@ def expected_improvement_search():
     res['counter'] = best_trace['counter']
 
     if args.dir_name is None:
+        if not os.path.exists(args.output_path):
+            os.makedirs(args.output_path)
         save_path = os.path.join(args.output_path, 'dim{}'.format(args.dim))
     else:
         save_path = os.path.join(args.dir_name, 'dngo-runs/')

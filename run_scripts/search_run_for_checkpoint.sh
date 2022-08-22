@@ -8,7 +8,7 @@ num=$4
 echo "Evaluating checkpoint $dir/$path"
 
 script_name="arch2vec/search_methods/$algo.py"
-nb_dataset="data/nb_dataset.json"
+nb_dataset="data/data.json"
 
 ls $dir
 

@@ -19,10 +19,9 @@ CONV3X3 = 'conv3x3-bn-relu'
 MAXPOOL3X3 = 'maxpool3x3'
 
 
-def gen_data_point(nasbench):
+def gen_data_point(nasbench, print_frequency=1000):
     i = 0
     epoch = 108
-    print_frequency = 1000
 
     padding = [0, 0, 0, 0, 0, 0, 0]
     best_val_acc = 0
@@ -99,13 +98,13 @@ def transform_operations(ops):
     return ops_array
 
 
-def gen_json_file(nasbench=None, save_path='data/data.json'):
+def gen_json_file(nasbench=None, save_path='data/data.json', print_frequency=1000):
     nasbench = nasbench if nasbench is not None else NASBENCH_TFRECORD
 
     if isinstance(nasbench, str):
         nasbench = api.NASBench(nasbench)
 
-    nas_gen = gen_data_point(nasbench)
+    nas_gen = gen_data_point(nasbench, print_frequency=print_frequency)
     data_dict = OrderedDict()
     for data_point in nas_gen:
         data_dict.update(data_point)

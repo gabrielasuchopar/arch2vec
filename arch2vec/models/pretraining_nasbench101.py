@@ -27,8 +27,9 @@ def _build_dataset(dataset, list):
     return X_adj, X_ops, torch.Tensor(indices)
 
 
-def pretraining_model(dataset, cfg, args):
-    nasbench = api.NASBench('../../../info-nas/data/nasbench_only108.tfrecord')
+def pretraining_model(dataset, cfg, args, nb_path=None):
+    nb_path = './data/nasbench_only108.tfrecord' if nb_path is None else nb_path
+    nasbench = api.NASBench(nb_path)
     train_ind_list, val_ind_list = range(int(len(dataset)*0.9)), range(int(len(dataset)*0.9), len(dataset))
     X_adj_train, X_ops_train, indices_train = _build_dataset(dataset, train_ind_list)
     X_adj_val, X_ops_val, indices_val = _build_dataset(dataset, val_ind_list)
@@ -105,7 +106,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Pretraining')
     parser.add_argument("--seed", type=int, default=1, help="random seed")
     parser.add_argument('--data', type=str, default='data/data.json',
-                        help='Data file (default: data.json')
+                        help='Data file (default: data/data.json')
+    parser.add_argument('--nasbench', type=str, default='data/nasbench_only108.tfrecord',
+                        help='Path to nasbench file (default: ./data/nasbench_only108.tfrecord)')
     parser.add_argument('--name', type=str, default='nasbench-101',
                         help='nasbench-101/nasbench-201/darts')
     parser.add_argument('--cfg', type=int, default=4,
@@ -134,4 +137,4 @@ if __name__ == '__main__':
     dataset = load_json(args.data)
     print('using {}'.format(args.data))
     print('feat dim {}'.format(args.dim))
-    pretraining_model(dataset, cfg, args)
+    pretraining_model(dataset, cfg, args, nb_path=args.nasbench)
